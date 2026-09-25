@@ -1,0 +1,94 @@
+<%- include('../partials/navbar') %>
+
+<%- include('../partials/flash-messages') %>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0 text-center">
+                        <i class="bi bi-person-plus"></i> Create Account
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form action="/auth/register" method="POST">
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" 
+                                   value="<%= typeof formData !== 'undefined' ? formData.fullName || '' : '' %>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username *</label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   value="<%= typeof formData !== 'undefined' ? formData.username || '' : '' %>" required>
+                            <div class="form-text">3-50 characters, letters, numbers, and underscores only</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   value="<%= typeof formData !== 'undefined' ? formData.email || '' : '' %>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" 
+                                   value="<%= typeof formData !== 'undefined' ? formData.phone || '' : '' %>">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="role" class="form-label">I am a... *</label>
+                            <select class="form-select" id="role" name="role" required>
+                                <option value="">Select your role</option>
+                                <option value="buyer" <%= (typeof formData !== 'undefined' && formData.role === 'buyer') ? 'selected' : '' %>>
+                                    Buyer - Looking to purchase property
+                                </option>
+                                <option value="owner" <%= (typeof formData !== 'undefined' && formData.role === 'owner') ? 'selected' : '' %>>
+                                    Owner - Want to sell property
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password *</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <div class="form-text">Must be at least 6 characters with uppercase, lowercase, and number</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password *</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-person-plus"></i> Create Account
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-0">Already have an account? <a href="/auth/login">Sign in here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>
+
+<script>
+// Password confirmation validation
+document.getElementById('confirmPassword').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = this.value;
+    
+    if (password !== confirmPassword) {
+        this.setCustomValidity('Passwords do not match');
+    } else {
+        this.setCustomValidity('');
+    }
+});
+</script>

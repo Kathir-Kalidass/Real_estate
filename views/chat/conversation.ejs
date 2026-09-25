@@ -1,0 +1,98 @@
+<%- include('../partials/navbar') %>
+
+<%- include('../partials/flash-messages') %>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Chat Header -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <% if (conversation.property_image) { %>
+                                <img src="<%= conversation.property_image %>" alt="Property" 
+                                     class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                            <% } %>
+                            <div>
+                                <h5 class="mb-0"><%= conversation.property_title %></h5>
+                                <p class="text-muted mb-0">
+                                    Conversation with 
+                                    <% if (user.id === conversation.buyer_id) { %>
+                                        <%= conversation.owner_name %>
+                                    <% } else { %>
+                                        <%= conversation.buyer_name %>
+                                    <% } %>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <h6 class="text-primary mb-0">$<%= conversation.property_price.toLocaleString() %></h6>
+                            <a href="/properties/<%= conversation.property_id %>" class="btn btn-outline-primary btn-sm">
+                                View Property
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div class="card">
+                <div class="card-body p-0">
+                    <div id="chat-messages" class="chat-container" style="height: 400px; overflow-y: auto; padding: 1rem;">
+                        <% if (messages && messages.length > 0) { %>
+                            <% messages.forEach(message => { %>
+                                <div class="message <%= message.sender_id === user.id ? 'own' : '' %>" 
+                                     data-message-id="<%= message.id %>">
+                                    <div class="message-bubble">
+                                        <div class="message-text"><%= message.message %></div>
+                                        <div class="message-info">
+                                            <%= message.sender_name %> • 
+                                            <%= new Date(message.created_at).toLocaleString() %>
+                                            <% if (message.is_read && message.sender_id === user.id) { %>
+                                                <i class="bi bi-check2-all text-primary"></i>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="text-center text-muted py-4">
+                                <i class="bi bi-chat-dots" style="font-size: 3rem;"></i>
+                                <p class="mt-2">No messages yet. Start the conversation!</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <!-- Message Input -->
+                <div class="card-footer">
+                    <form id="message-form" class="d-flex gap-2">
+                        <input type="text" id="message-input" class="form-control" 
+                               placeholder="Type your message..." required>
+                        <button type="submit" id="send-btn" class="btn btn-primary">
+                            <i class="bi bi-send"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>
+
+<script>
+    // Set current user ID for client-side JavaScript
+    window.currentUserId = <%= user.id %>;
+    
+    // Join conversation when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        joinConversation(<%= conversation.id %>);
+    });
+    
+    // Leave conversation when page unloads
+    window.addEventListener('beforeunload', function() {
+        leaveConversation();
+    });
+</script>

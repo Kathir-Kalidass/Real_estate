@@ -1,0 +1,74 @@
+<%- include('../partials/navbar') %>
+
+<%- include('../partials/flash-messages') %>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2>My Conversations</h2>
+            
+            <% if (conversations && conversations.length > 0) { %>
+                <div class="list-group">
+                    <% conversations.forEach(conversation => { %>
+                        <a href="/chat/<%= conversation.id %>" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <div class="d-flex">
+                                    <% if (conversation.property_image) { %>
+                                        <img src="<%= conversation.property_image %>" alt="Property" 
+                                             class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                    <% } else { %>
+                                        <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" 
+                                             style="width: 60px; height: 60px;">
+                                            <i class="bi bi-house text-muted"></i>
+                                        </div>
+                                    <% } %>
+                                    
+                                    <div>
+                                        <h6 class="mb-1"><%= conversation.property_title %></h6>
+                                        <p class="mb-1 text-muted">with <%= conversation.other_party_name %></p>
+                                        <% if (conversation.last_message) { %>
+                                            <small class="text-muted">
+                                                <%= conversation.last_message.length > 50 ? 
+                                                    conversation.last_message.substring(0, 50) + '...' : 
+                                                    conversation.last_message %>
+                                            </small>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-end">
+                                    <small class="text-muted">
+                                        $<%= conversation.property_price.toLocaleString() %>
+                                    </small>
+                                    <% if (conversation.unread_count > 0) { %>
+                                        <div>
+                                            <span class="badge bg-primary rounded-pill">
+                                                <%= conversation.unread_count %>
+                                            </span>
+                                        </div>
+                                    <% } %>
+                                    <% if (conversation.last_message_time) { %>
+                                        <div>
+                                            <small class="text-muted">
+                                                <%= new Date(conversation.last_message_time).toLocaleDateString() %>
+                                            </small>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </a>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="text-center py-5">
+                    <i class="bi bi-chat-dots text-muted" style="font-size: 4rem;"></i>
+                    <h4 class="text-muted mt-3">No conversations yet</h4>
+                    <p class="text-muted">Start chatting with property owners by viewing properties</p>
+                    <a href="/properties" class="btn btn-primary">Browse Properties</a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

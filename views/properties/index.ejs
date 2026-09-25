@@ -1,0 +1,81 @@
+<%- include('../partials/navbar') %>
+
+<%- include('../partials/flash-messages') %>
+
+<!-- Search Section -->
+<section class="search-section py-4 bg-light">
+    <div class="container">
+        <form action="/properties" method="GET" class="row g-3">
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="search" placeholder="Search properties..." 
+                       value="<%= searchParams.search || '' %>">
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="location" placeholder="Location" 
+                       value="<%= searchParams.location || '' %>">
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="propertyType">
+                    <option value="">All Types</option>
+                    <option value="house" <%= searchParams.propertyType === 'house' ? 'selected' : '' %>>House</option>
+                    <option value="apartment" <%= searchParams.propertyType === 'apartment' ? 'selected' : '' %>>Apartment</option>
+                    <option value="condo" <%= searchParams.propertyType === 'condo' ? 'selected' : '' %>>Condo</option>
+                    <option value="land" <%= searchParams.propertyType === 'land' ? 'selected' : '' %>>Land</option>
+                    <option value="commercial" <%= searchParams.propertyType === 'commercial' ? 'selected' : '' %>>Commercial</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="number" class="form-control" name="minPrice" placeholder="Min Price" 
+                       value="<%= searchParams.minPrice || '' %>">
+            </div>
+            <div class="col-md-2">
+                <input type="number" class="form-control" name="maxPrice" placeholder="Max Price" 
+                       value="<%= searchParams.maxPrice || '' %>">
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Properties Section -->
+<section class="properties-section py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h2>Properties (<%= properties.length %>)</h2>
+            </div>
+            <div class="col-md-6 text-end">
+                <% if (user && user.role === 'owner') { %>
+                    <a href="/properties/add" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Add New Property
+                    </a>
+                <% } %>
+            </div>
+        </div>
+        
+        <% if (properties && properties.length > 0) { %>
+            <div class="row">
+                <% properties.forEach(property => { %>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <%- include('../partials/property-card', { property: property }) %>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="text-center py-5">
+                <i class="bi bi-house text-muted" style="font-size: 4rem;"></i>
+                <h4 class="text-muted mt-3">No properties found</h4>
+                <p class="text-muted">Try adjusting your search criteria</p>
+                <% if (user && user.role === 'owner') { %>
+                    <a href="/properties/add" class="btn btn-primary">Add Your First Property</a>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

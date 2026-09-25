@@ -1,0 +1,58 @@
+<div class="card h-100 shadow-sm">
+    <% if (property.primary_image) { %>
+        <img src="<%= property.primary_image %>" class="card-img-top" alt="<%= property.title %>" style="height: 200px; object-fit: cover;">
+    <% } else { %>
+        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+            <i class="bi bi-house text-muted" style="font-size: 3rem;"></i>
+        </div>
+    <% } %>
+    
+    <div class="card-body">
+        <h5 class="card-title"><%= property.title %></h5>
+        <p class="card-text text-muted">
+            <i class="bi bi-geo-alt"></i> <%= property.location %>
+        </p>
+        <p class="card-text">
+            <%= property.description.length > 100 ? property.description.substring(0, 100) + '...' : property.description %>
+        </p>
+        
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="h5 text-primary mb-0">$<%= property.price.toLocaleString() %></span>
+            <span class="badge bg-secondary"><%= property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1) %></span>
+        </div>
+        
+        <% if (property.bedrooms || property.bathrooms || property.area_sqft) { %>
+            <div class="row text-muted small mb-3">
+                <% if (property.bedrooms) { %>
+                    <div class="col-4">
+                        <i class="bi bi-door-closed"></i> <%= property.bedrooms %> bed
+                    </div>
+                <% } %>
+                <% if (property.bathrooms) { %>
+                    <div class="col-4">
+                        <i class="bi bi-water"></i> <%= property.bathrooms %> bath
+                    </div>
+                <% } %>
+                <% if (property.area_sqft) { %>
+                    <div class="col-4">
+                        <i class="bi bi-arrows-angle-expand"></i> <%= property.area_sqft %> sq ft
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+        
+        <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+                By <%= property.owner_name || 'Owner' %>
+            </small>
+            <div class="btn-group" role="group">
+                <a href="/properties/<%= property.id %>" class="btn btn-outline-primary btn-sm">View Details</a>
+                <% if (user && user.role === 'buyer' && user.id !== property.owner_id) { %>
+                    <a href="/chat/property/<%= property.id %>" class="btn btn-primary btn-sm">
+                        <i class="bi bi-chat-dots"></i> Chat
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
